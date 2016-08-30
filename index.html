@@ -24,16 +24,20 @@
 <h2>
 <a id="bginfoinstallps1" class="anchor" href="#bginfoinstallps1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>bginfoinstall.ps1</h2>
 
+<p>This script will automatically setup bginfo to run from startup and create a registry key to have bginfo to run your predefined config file.</p>
+
+<p>You will need to log on and off for the changes to apply. This will also affect all users who log into the computer.</p>
+
 <pre><code>#BGInfo Install
 New-Item -ItemType Directory -Force -Path C:\Powershell\Logs #Creating Log Directory
-Start-Transcript -Path "C:\Powershell\logs\BgInfo_Installer_Global_$(get-date -f MM-dd-yyyy).txt" #Creates Transcript for Auditing
+Start-Transcript -Path "C:\Powershell\logs\BgInfo_Installer__$(get-date -f MM-dd-yyyy).txt" #Creates Transcript for Auditing
 
 if (Test-Path "C:\bginfo")
 { remove-item -path "C:\bginfo" -Recurse }
 
-copy-item \\usirvwip03\Software\BGInfo -Destination C:\BgInfo -Recurse -Verbose
+copy-item \\YourServer\Software\BGInfo -Destination C:\BgInfo -Recurse -Verbose
 
-Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -name "BgInfo" -value  "C:\bginfo\Bginfo.exe C:\bginfo\BioRadServer.bgi /TIMER:0 /NOLICPROMPT" -Verbose
+Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -name "BgInfo" -value  "C:\bginfo\Bginfo.exe C:\bginfo\YourConfig.bgi /TIMER:0 /NOLICPROMPT" -Verbose
 
 Write-Host BGInfo Installed -ForegroundColor Green -BackgroundColor Black
 
