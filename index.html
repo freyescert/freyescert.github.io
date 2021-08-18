@@ -30,12 +30,12 @@
         <h3>
 <a id="powershell-examples" class="anchor" href="#powershell-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Powershell Examples</h3>
 
-<p>Repository for all the powershell scripts i've designed or adapted from the internet.</p>
+<p>Repository for all the scripts i've designed or adapted from the internet.</p>
 
 <h2>
 <a id="bginfoinstallps1" class="anchor" href="#bginfoinstallps1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>bginfoinstall.ps1</h2>
 
-<p>This script will automatically setup bginfo to run from startup and create a registry key to have bginfo to run your predefined config file.</p>
+<p>This script powershell will automatically setup bginfo to run from startup and create a registry key to have bginfo to run your predefined config file.</p>
 
 <p>You will need to log on and off for the changes to apply. This will also affect all users who log into the computer.</p>
 
@@ -58,13 +58,13 @@ Stop-Transcript
 <h2>
 <a id="configure-ip-and-join-domain" class="anchor" href="#configure-ip-and-join-domain" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure IP and Join Domain</h2>
 
-<p>Simple script that does the following</p>
+<p>Powershell script that automates the following</p>
 
 <ol>
 <li>Assign IP, Subnet Mask, DNS</li>
 <li>Disable the builtin Windows Firewall</li>
 <li>Enable remote desktop connections</li>
-<li>Rename computer and join to the domain.</li>
+<li>Rename computer, join to the domain and restart.</li>
 </ol>
 
 <pre><code> &lt;#
@@ -109,6 +109,43 @@ Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\W
 #join to domain and restart
 Add-Computer -DomainName $Domain -NewName $Name -OUPath $OU -Verbose -Restart
 </code></pre>
+
+<h2>
+<a id="Force Wallpaper change in Win10" class="anchor" href="#force-wallpaper-change-in-win10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Force Wallpaper change in Win10</h2>
+
+<p>Script used to force ownership of the builtin default wallpaper and replace it with your own in C:\images\ for use during golden image creation</p>
+
+<ol>
+<li>Deletes Wallpaper cache</li>
+<li>Deletes builtin wallpaper images</li>
+<li>Replaces builtin wallpaper files with ones the user provides </li>
+<li>Sets the lockscreen image to the image placed in C:\images</li>
+</ol>
+
+<p>Recommend you do this before creating any other accounts</p>
+
+<pre><code>takeown /f c:\windows\WEB\wallpaper\Windows\img0.jpg
+takeown /f C:\Windows\Web\4K\Wallpaper\Windows\*.*
+icacls c:\windows\WEB\wallpaper\Windows\img0.jpg /Grant Administrators:(F)
+icacls C:\Windows\Web\4K\Wallpaper\Windows\*.* /Grant Administrators:(F)
+del /F /S /Q %USERPROFILE%\AppData\Roaming\Microsoft\Windows\Themes\TranscodedWallpaper
+del /F /S /Q %USERPROFILE%\AppData\Roaming\Microsoft\Windows\Themes\CachedFiles\*.*
+del /F /S /Q c:\windows\WEB\wallpaper\Windows\img0.jpg
+del /q C:\Windows\Web\4K\Wallpaper\Windows\*.*
+
+
+rem takeown /F C:\ProgramData\Microsoft\Windows\SystemDat
+rem takeown /F C:\ProgramData\Microsoft\Windows\SystemData\S-1-5-18 /R /D Y
+
+
+copy "%~dp0img0.jpg" c:\windows\WEB\wallpaper\Windows\img0.jpg
+copy "%~dp04k\*.*" C:\Windows\Web\4K\Wallpaper\Windows
+
+md C:\images\
+copy "%~dp0Wallpaper.jpg" C:\images\
+reg add "HKLM\Software\Policies\Microsoft\Windows\Personalization" /v "LockScreenImage" /d C:\Images\Wallpaper.jpg /f
+</code></pre>
+
 
 <h2>
 <a id="links" class="anchor" href="#links" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Links</h2>
