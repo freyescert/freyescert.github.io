@@ -122,7 +122,7 @@ Add-Computer -DomainName $Domain -NewName $Name -OUPath $OU -Verbose -Restart
 <li>Sets the lockscreen image to the image placed in C:\images</li>
 </ol>
 
-<p>Recommend you do this before creating any other accounts</p>
+<p>Recommend you do this on the builtin administrator before creating any accounts.</p>
 
 <pre><code>takeown /f c:\windows\WEB\wallpaper\Windows\img0.jpg
 takeown /f C:\Windows\Web\4K\Wallpaper\Windows\*.*
